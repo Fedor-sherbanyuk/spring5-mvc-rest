@@ -1,6 +1,6 @@
-package guru.springfamework.domain;
+package guru.springfamework.api.v1.domain;
 
-import lombok.Data;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,13 +10,17 @@ import javax.persistence.Id;
 /**
  * Created by jt on 9/24/17.
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
 
 }
