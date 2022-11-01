@@ -3,7 +3,8 @@ package guru.springfamework.api.v1.mapper;
 import guru.springfamework.api.v1.domain.Customer;
 import guru.springfamework.api.v1.model.CustomerDTO;
 import junit.framework.TestCase;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+
 
 public class CustomerMapperTest extends TestCase {
     public static final String NAME = "Joe";

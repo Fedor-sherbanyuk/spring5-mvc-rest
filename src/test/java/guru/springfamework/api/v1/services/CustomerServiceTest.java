@@ -1,5 +1,6 @@
 package guru.springfamework.api.v1.services;
 
+import guru.springfamework.api.v1.controllers.CategoryController;
 import guru.springfamework.api.v1.domain.Category;
 import guru.springfamework.api.v1.domain.Customer;
 import guru.springfamework.api.v1.mapper.CategoryMapper;
@@ -9,6 +10,7 @@ import guru.springfamework.api.v1.model.CustomerDTO;
 import guru.springfamework.api.v1.repositories.CategoryRepository;
 import guru.springfamework.api.v1.repositories.CustomerRepository;
 import junit.framework.TestCase;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -20,9 +22,9 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-public class CustomerServiceTest extends TestCase{
+public class CustomerServiceTest {
     public static final Long ID = 1L;
 
     public static final String NAME = "Joe";
@@ -50,7 +52,7 @@ public class CustomerServiceTest extends TestCase{
         List<CustomerDTO> customerDTOList = customerService.getAllCustomers();
 
         //then
-        assertEquals(3, customerDTOList.size());
+        Assert.assertEquals(3, customerDTOList.size());
     }
 
 //    public void testGetCustomerByFirstName() {
@@ -97,7 +99,7 @@ public class CustomerServiceTest extends TestCase{
         CustomerDTO customerDTO = customerService.getCustomerById(ID);
 
         //then
-        assertEquals(NAME, customerDTO.getFirstname());
+        Assert.assertEquals(NAME, customerDTO.getFirstname());
 //        assertEquals(LASTNAME, customerDTO.getLastname());
     }
 
@@ -116,8 +118,32 @@ public class CustomerServiceTest extends TestCase{
         CustomerDTO customerDTONew = customerService.createdNewCustomer(customerDTO);
 
         //then
-        assertEquals(customerDTONew.getFirstname(), customer.getFirstname());
-        assertEquals("/api/v1/customers/1", customerDTONew.getCustomerUrl());
+        Assert.assertEquals(customerDTONew.getFirstname(), customer.getFirstname());
+        Assert.assertEquals(CategoryController.BASE_URL+1L, customerDTONew.getCustomerUrl());
 //        assertEquals(LASTNAME, customerDTO.getLastname());
+    }
+    @Test
+    public void saveCustomerByDTO(){
+        CustomerDTO customerDTO =new CustomerDTO();
+        customerDTO.setFirstname(NAME);
+
+        Customer customer = new Customer();
+        customer.setFirstname(customerDTO.getFirstname());
+        customer.setLastname(customerDTO.getLastname());
+        customer.setId(ID);
+        when(customerRepository.save(any(Customer.class))).thenReturn(customer);
+
+        //when
+        CustomerDTO customerDTONew = customerService.saveCustomerByDTO(ID,customerDTO);
+
+        //then
+        Assert.assertEquals(customerDTONew.getFirstname(), customer.getFirstname());
+        Assert.assertEquals(CategoryController.BASE_URL+1L, customerDTONew.getCustomerUrl());
+    }
+
+    @Test
+    public void deleteCustomerById() {
+        customerRepository.deleteById(ID);
+        verify(customerRepository,times(1)).deleteById(anyLong());
     }
 }
